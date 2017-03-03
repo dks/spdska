@@ -1,0 +1,4 @@
+03-03 22:38:01 jdbc[2]: exception
+org.h2.jdbc.JdbcSQLException: Таблица "DATA" уже существует
+Table "DATA" already exists; SQL statement:
+CREATE TABLE data(id int AUTO_INCREMENT primary key,txt VARCHAR(5)); [42101-169]
