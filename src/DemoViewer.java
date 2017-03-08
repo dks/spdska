@@ -25,9 +25,10 @@ public class DemoViewer {
 		renderPanel = new JPanel() {
 			public void paintComponent(Graphics g) {
 				Graphics2D g2 = (Graphics2D) g;
+				// Создаем черный экран
 				g2.setColor(Color.BLACK);
 				g2.fillRect(0, 0, getWidth(), getHeight());
-
+				// Создаем первоначальный тетраэдр из четырех треугольников
 				List<Triangle> tris = new ArrayList<>();
 				tris.add(new Triangle(new Vertex(100, 100, 100),
 							new Vertex(-100, -100, 100),
@@ -45,32 +46,55 @@ public class DemoViewer {
 							new Vertex(100, -100, -100),
 							new Vertex(-100, -100, 100),
 							Color.BLUE));
-
+				// Превращаем тетраэдр в сферу
 				for (int i = 0; i < 4; i++) { tris = inflate(tris); }
-
+				// Получаем значения ползунков
 				double heading = Math.toRadians(headingSlider.getValue());
+				double pitch = Math.toRadians(pitchSlider.getValue());
+				// Задаем матрицы поворота
 				Matrix3 headingTransform = new Matrix3(new double[] {
 						Math.cos(heading), 0, -Math.sin(heading),
 						0, 1, 0,
 						Math.sin(heading), 0, Math.cos(heading)
 						});
-				double pitch = Math.toRadians(pitchSlider.getValue());
 				Matrix3 pitchTransform = new Matrix3(new double[] {
 						1, 0, 0,
 						0, Math.cos(pitch), Math.sin(pitch),
 						0, -Math.sin(pitch), Math.cos(pitch)
 						});
+				// Задаем общую матрицу поворота
 				Matrix3 transform = headingTransform.multiply(pitchTransform);
-
+				// Инициализируем видеобуфер и массив Z-буфера
 				BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-
 				double[] zBuffer = new double[img.getWidth() * img.getHeight()];
 				// initialize array with extremely far away depths
 				for (int q = 0; q < zBuffer.length; q++) {
 					zBuffer[q] = Double.NEGATIVE_INFINITY;
 				}
 
-				//DRAWING CORE FOR MESHED GRAPHICS
+				//ГЛАВНЫЙ МЕТОД ОТРИСОВКИ - МОЙ
+				g2.translate(getWidth() / 2, getHeight() / 2);
+				g2.setColor(Color.WHITE);
+//TODO:Z-sort tris
+// tris.getLength => create array
+// fill the stuff
+// z=z1+z2+z3/3;
+// Возможно удалить скрытые треугольники
+				for (Triangle t : tris) {
+					Vertex v1 = transform.transform(t.v1);
+					Vertex v2 = transform.transform(t.v2);
+					Vertex v3 = transform.transform(t.v3);
+					int[] xs = {(int)v1.x,(int)v2.x,(int)v3.x};
+					int[] ys = {(int)v1.y,(int)v2.y,(int) v3.y};
+					Polygon tri = new Polygon(xs,ys,3);
+					// Можно задать текстуру вместо цвета
+					g2.setPaint(t.color);
+					g2.fill(tri);
+					g2.setPaint(Color.WHITE);
+					g2.draw(tri);
+				}
+
+/*				//DRAWING CORE FOR MESHED GRAPHICS - general version
 				g2.translate(getWidth() / 2, getHeight() / 2);
 				g2.setColor(Color.WHITE);
 				for (Triangle t : tris) {
@@ -83,42 +107,43 @@ public class DemoViewer {
 					path.lineTo(v3.x, v3.y);
 					path.closePath();
 					g2.draw(path);
-				}
+				}// */
 				
-				//DRAWING CORE FOR SOLID GRAPHICS
-/*				g2.translate(-getWidth() / 2,-getHeight() / 2);
+/*				//DRAWING CORE FOR SOLID GRAPHICS
+				g2.translate(-getWidth() / 2,-getHeight() / 2);
 				for (Triangle t : tris) { 
+					// Поворот вершин
 					Vertex v1 = transform.transform(t.v1);
+					Vertex v2 = transform.transform(t.v2);
+					Vertex v3 = transform.transform(t.v3);
+					// Сдвиг вершин на середину экрана
 					v1.x += getWidth() / 2;
 					v1.y += getHeight() / 2;
-					Vertex v2 = transform.transform(t.v2);
 					v2.x += getWidth() / 2;
 					v2.y += getHeight() / 2;
-					Vertex v3 = transform.transform(t.v3);
 					v3.x += getWidth() / 2;
 					v3.y += getHeight() / 2;
-
+					// Расчет вектора нормали
 					Vertex ab = new Vertex(v2.x - v1.x, v2.y - v1.y, v2.z - v1.z);
 					Vertex ac = new Vertex(v3.x - v1.x, v3.y - v1.y, v3.z - v1.z);
-					Vertex norm = new Vertex(
-							ab.y * ac.z - ab.z * ac.y,
-							ab.z * ac.x - ab.x * ac.z,
-							ab.x * ac.y - ab.y * ac.x
-							);
+					Vertex norm = new Vertex(ab.y * ac.z - ab.z * ac.y,
+						ab.z * ac.x - ab.x * ac.z,
+						ab.x * ac.y - ab.y * ac.x);
 					double normalLength = Math.sqrt(norm.x * norm.x + norm.y * norm.y + norm.z * norm.z);
 					norm.x /= normalLength;
 					norm.y /= normalLength;
 					norm.z /= normalLength;
-
+					// Задаем косинус между нормалью треугольника и направлением света
+					// так как наш источник света идет из (0,0,1) изменяется только одна величина
 					double angleCos = Math.abs(norm.z);
-
+					// Определение прямоугольных границ расчитываемых треугольников
 					int minX = (int) Math.max(0, Math.ceil(Math.min(v1.x, Math.min(v2.x, v3.x))));
-					int maxX = (int) Math.min(img.getWidth() - 1, Math.floor(Math.max(v1.x, Math.max(v2.x, v3.x))));
+					int maxX = (int) Math.min(img.getWidth()-1, Math.floor(Math.max(v1.x, Math.max(v2.x, v3.x))));
 					int minY = (int) Math.max(0, Math.ceil(Math.min(v1.y, Math.min(v2.y, v3.y))));
-					int maxY = (int) Math.min(img.getHeight() - 1, Math.floor(Math.max(v1.y, Math.max(v2.y, v3.y))));
-
+					int maxY = (int) Math.min(img.getHeight()-1, Math.floor(Math.max(v1.y, Math.max(v2.y, v3.y))));
 					double triangleArea = (v1.y - v3.y) * (v2.x - v3.x) + (v2.y - v3.y) * (v3.x - v1.x);
-
+					// Основной цикл рендеринга
+					// Построчная развертка по пикселям в границах прямоугольников рассчитанных выше
 					for (int y = minY; y <= maxY; y++) {
 						for (int x = minX; x <= maxX; x++) {
 							double b1 = ((y - v3.y) * (v2.x - v3.x) + (v2.y - v3.y) * (v3.x - x)) / triangleArea;
@@ -134,20 +159,19 @@ public class DemoViewer {
 							}
 						}
 					}
-				}//End of for loop (triangle transverse) */
-
+				}//End of main solid graphics loop */
+				// Print buffer to screen
 				g2.drawImage(img, 0, 0, null);
 			}
 		};
+		
 		pane.add(renderPanel, BorderLayout.CENTER);
-
 		headingSlider.addChangeListener(new ChangeListener(){
 			public void stateChanged(ChangeEvent e){renderPanel.repaint();}
 		});
 		pitchSlider.addChangeListener(new ChangeListener(){
 			public void stateChanged(ChangeEvent e){renderPanel.repaint();}
 		});
-
 		frame.setSize(400, 400);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
