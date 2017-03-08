@@ -46,7 +46,7 @@ public class DemoViewer {
 							new Vertex(-100, -100, 100),
 							Color.BLUE));
 
-				for (int i = 0; i < 2; i++) { tris = inflate(tris); }
+				for (int i = 0; i < 4; i++) { tris = inflate(tris); }
 
 				double heading = Math.toRadians(headingSlider.getValue());
 				Matrix3 headingTransform = new Matrix3(new double[] {
@@ -70,7 +70,24 @@ public class DemoViewer {
 					zBuffer[q] = Double.NEGATIVE_INFINITY;
 				}
 
+				//DRAWING CORE FOR MESHED GRAPHICS
+				g2.translate(getWidth() / 2, getHeight() / 2);
+				g2.setColor(Color.WHITE);
 				for (Triangle t : tris) {
+					Vertex v1 = transform.transform(t.v1);
+					Vertex v2 = transform.transform(t.v2);
+					Vertex v3 = transform.transform(t.v3);
+					Path2D path = new Path2D.Double();
+					path.moveTo(v1.x, v1.y);
+					path.lineTo(v2.x, v2.y);
+					path.lineTo(v3.x, v3.y);
+					path.closePath();
+					g2.draw(path);
+				}
+				
+				//DRAWING CORE FOR SOLID GRAPHICS
+/*				g2.translate(-getWidth() / 2,-getHeight() / 2);
+				for (Triangle t : tris) { 
 					Vertex v1 = transform.transform(t.v1);
 					v1.x += getWidth() / 2;
 					v1.y += getHeight() / 2;
@@ -117,8 +134,7 @@ public class DemoViewer {
 							}
 						}
 					}
-
-				}
+				}//End of for loop (triangle transverse) */
 
 				g2.drawImage(img, 0, 0, null);
 			}
@@ -164,6 +180,7 @@ public class DemoViewer {
 		for (Triangle t : result) {
 			for (Vertex v : new Vertex[] { t.v1, t.v2, t.v3 }) {
 				double l = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z) / Math.sqrt(30000);
+				//double l = Math.sqrt(0.5 * v.x * v.x + 2 *  v.y * v.y + v.z * v.z) / Math.sqrt(100000);
 				v.x /= l;
 				v.y /= l;
 				v.z /= l;
