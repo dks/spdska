@@ -3,8 +3,9 @@
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.awt.event.*;
@@ -33,7 +34,7 @@ public class DemoViewer {
 				tris.add(new Triangle(new Vertex(100, 100, 100),
 							new Vertex(-100, -100, 100),
 							new Vertex(-100, 100, -100),
-							Color.WHITE));
+							Color.GRAY));
 				tris.add(new Triangle(new Vertex(100, 100, 100),
 							new Vertex(-100, -100, 100),
 							new Vertex(100, -100, -100),
@@ -66,35 +67,34 @@ public class DemoViewer {
 				Matrix3 transform = headingTransform.multiply(pitchTransform);
 				// Инициализируем видеобуфер и массив Z-буфера
 				BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-				double[] zBuffer = new double[img.getWidth() * img.getHeight()];
-				// initialize array with extremely far away depths
-				for (int q = 0; q < zBuffer.length; q++) {
-					zBuffer[q] = Double.NEGATIVE_INFINITY;
-				}
+				g2.translate(getWidth() / 2, getHeight() / 2);
 
 				//ГЛАВНЫЙ МЕТОД ОТРИСОВКИ - МОЙ
-				g2.translate(getWidth() / 2, getHeight() / 2);
 				g2.setColor(Color.WHITE);
-//TODO:Z-sort tris
-// tris.getLength => create array
-// fill the stuff
-// z=z1+z2+z3/3;
-// Возможно удалить скрытые треугольники
+				// Первый проход - преобразования из 3Д в 2Д и отправка в список
+				List<PolygonWrapper> polys = new ArrayList<>();
 				for (Triangle t : tris) {
 					Vertex v1 = transform.transform(t.v1);
 					Vertex v2 = transform.transform(t.v2);
 					Vertex v3 = transform.transform(t.v3);
 					int[] xs = {(int)v1.x,(int)v2.x,(int)v3.x};
 					int[] ys = {(int)v1.y,(int)v2.y,(int) v3.y};
-					Polygon tri = new Polygon(xs,ys,3);
-					// Можно задать текстуру вместо цвета
-					g2.setPaint(t.color);
-					g2.fill(tri);
-					g2.setPaint(Color.WHITE);
-					g2.draw(tri);
+					Polygon plg = new Polygon(xs,ys,3);
+//TODO:add shadowing
+					polys.add(new PolygonWrapper((int)(v1.z+v2.z+v3.z)/3,plg,t.color));
 				}
+				// Сортировка по глубине (Z-буфер)
+				Collections.sort(polys);
+				// Второй проход - отрисовка отсортированных многоугольников
+				for (PolygonWrapper p : polys) {
+					// Можно задать текстуру вместо цвета
+					g2.setPaint(p.getColor());
+					g2.fill(p.getPolygon());
+					g2.setPaint(Color.WHITE);
+					g2.draw(p.getPolygon());
+				}// */
 
-/*				//DRAWING CORE FOR MESHED GRAPHICS - general version
+/*			//DRAWING CORE FOR MESHED GRAPHICS - general version
 				g2.translate(getWidth() / 2, getHeight() / 2);
 				g2.setColor(Color.WHITE);
 				for (Triangle t : tris) {
@@ -108,8 +108,11 @@ public class DemoViewer {
 					path.closePath();
 					g2.draw(path);
 				}// */
-				
-/*				//DRAWING CORE FOR SOLID GRAPHICS
+/*			//DRAWING CORE FOR SOLID GRAPHICS
+				double[] zBuffer = new double[img.getWidth() * img.getHeight()];
+				for (int q = 0; q < zBuffer.length; q++) {
+					zBuffer[q] = Double.NEGATIVE_INFINITY;
+				}
 				g2.translate(-getWidth() / 2,-getHeight() / 2);
 				for (Triangle t : tris) { 
 					// Поворот вершин
@@ -187,6 +190,10 @@ public class DemoViewer {
 		int green = (int) Math.pow(greenLinear, 1/2.4);
 		int blue = (int) Math.pow(blueLinear, 1/2.4);
 
+    //int red = (int) (color.getRed() * shade);
+    //int green = (int) (color.getGreen() * shade);
+    //int blue = (int) (color.getBlue() * shade);
+
 		return new Color(red, green, blue);
 	}
 
@@ -262,4 +269,29 @@ class Matrix3 {
             in.x * values[2] + in.y * values[5] + in.z * values[8]
         );
     }
+}
+
+class PolygonWrapper implements Comparable<PolygonWrapper>{
+	private Polygon pol;
+	private int Z;
+	private Color col;
+
+	public PolygonWrapper(int Z, Polygon pol, Color col){
+		this.pol = pol;
+		this.Z = Z;
+		this.col = col;
+	}
+
+	public int getZ(){ return Z; }
+	public Color getColor(){ return col; }
+	public Polygon getPolygon(){ return pol; }
+
+	@Override
+	public int compareTo(PolygonWrapper pw){
+		return (this.getZ() < pw.getZ() ? -1 : (this.getZ() == pw.getZ() ? 0 : 1));
+	}
+	@Override
+	public String toString(){
+		return "Poligon: Z-ind="+this.getZ()+"; coords: "+pol.xpoints[0]+", "+pol.ypoints[0]+"; "+pol.xpoints[1]+", "+pol.ypoints[1]+"; "+pol.xpoints[2]+", "+pol.ypoints[2]+"; ";
+	}
 }
