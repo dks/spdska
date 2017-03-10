@@ -65,7 +65,7 @@ public class DemoViewer {
 						});
 				// Задаем общую матрицу поворота
 				Matrix3 transform = headingTransform.multiply(pitchTransform);
-				// Инициализируем видеобуфер и массив Z-буфера
+				// Инициализируем видеобуфер
 				BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
 				g2.translate(getWidth() / 2, getHeight() / 2);
 
@@ -74,14 +74,27 @@ public class DemoViewer {
 				// Первый проход - преобразования из 3Д в 2Д и отправка в список
 				List<PolygonWrapper> polys = new ArrayList<>();
 				for (Triangle t : tris) {
+					// Вычисление 3Д координат после преобразования
 					Vertex v1 = transform.transform(t.v1);
 					Vertex v2 = transform.transform(t.v2);
 					Vertex v3 = transform.transform(t.v3);
+					// Для проскопараллельной проекции просто берем координаты х и у
 					int[] xs = {(int)v1.x,(int)v2.x,(int)v3.x};
 					int[] ys = {(int)v1.y,(int)v2.y,(int) v3.y};
 					Polygon plg = new Polygon(xs,ys,3);
-//TODO:add shadowing
-					polys.add(new PolygonWrapper((int)(v1.z+v2.z+v3.z)/3,plg,t.color));
+					// Вычисление вектора нормали для плоского затенения
+					Vertex n = new Vertex(		
+						((v2.y-v1.y)*(v3.z-v1.z))-((v2.z-v1.z)*(v3.y-v1.y)),
+						(-1)*(((v2.x-v1.x)*(v3.z-v1.z))-((v3.x-v1.x)*(v2.z-v1.z))),
+						((v2.x-v1.x)*(v3.y-v1.y))-((v2.y-v1.y)*(v3.x-v1.x))
+					);
+					// Set lightsource vector
+					Vertex ls = new Vertex(0,0,1);
+					// Вычисляем косинус, берем абсолютную величину как множитель для цвета
+					double cos = Math.abs( (ls.x*n.x+ls.y*n.y+ls.z*n.z)/
+						(Math.sqrt(ls.x*ls.x+ls.y*ls.y+ls.z*ls.z)*Math.sqrt(n.x*n.x+n.y*n.y+n.z*n.z)) );
+					// Добавляем результат всех вычислений в общий массив
+					polys.add(new PolygonWrapper((int)(v1.z+v2.z+v3.z)/3,plg,getShade(t.color, cos)) );
 				}
 				// Сортировка по глубине (Z-буфер)
 				Collections.sort(polys);
@@ -90,9 +103,9 @@ public class DemoViewer {
 					// Можно задать текстуру вместо цвета
 					g2.setPaint(p.getColor());
 					g2.fill(p.getPolygon());
-					g2.setPaint(Color.WHITE);
-					g2.draw(p.getPolygon());
-				}// */
+					//g2.setPaint(Color.WHITE);
+					//g2.draw(p.getPolygon());
+				}// Конец рендеринга */
 
 /*			//DRAWING CORE FOR MESHED GRAPHICS - general version
 				g2.translate(getWidth() / 2, getHeight() / 2);
@@ -108,6 +121,7 @@ public class DemoViewer {
 					path.closePath();
 					g2.draw(path);
 				}// */
+
 /*			//DRAWING CORE FOR SOLID GRAPHICS
 				double[] zBuffer = new double[img.getWidth() * img.getHeight()];
 				for (int q = 0; q < zBuffer.length; q++) {
@@ -185,15 +199,12 @@ public class DemoViewer {
 		double redLinear = Math.pow(color.getRed(), 2.4) * shade;
 		double greenLinear = Math.pow(color.getGreen(), 2.4) * shade;
 		double blueLinear = Math.pow(color.getBlue(), 2.4) * shade;
-
 		int red = (int) Math.pow(redLinear, 1/2.4);
 		int green = (int) Math.pow(greenLinear, 1/2.4);
 		int blue = (int) Math.pow(blueLinear, 1/2.4);
-
-    //int red = (int) (color.getRed() * shade);
-    //int green = (int) (color.getGreen() * shade);
-    //int blue = (int) (color.getBlue() * shade);
-
+		/* int red = (int) (color.getRed() * shade);
+    int green = (int) (color.getGreen() * shade);
+    int blue = (int) (color.getBlue() * shade); */
 		return new Color(red, green, blue);
 	}
 
@@ -210,8 +221,8 @@ public class DemoViewer {
 		}
 		for (Triangle t : result) {
 			for (Vertex v : new Vertex[] { t.v1, t.v2, t.v3 }) {
-				double l = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z) / Math.sqrt(30000);
-				//double l = Math.sqrt(0.5 * v.x * v.x + 2 *  v.y * v.y + v.z * v.z) / Math.sqrt(100000);
+				//double l = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z) / Math.sqrt(30000);
+				double l = Math.sqrt(0.2 * v.x * v.x + 2 *  v.y * v.y + v.z * v.z) / Math.sqrt(50000);
 				v.x /= l;
 				v.y /= l;
 				v.z /= l;
