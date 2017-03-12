@@ -49,6 +49,10 @@ public class DemoViewer {
 							Color.BLUE));
 				// Превращаем тетраэдр в сферу
 				for (int i = 0; i < 4; i++) { tris = inflate(tris); }
+				tris.add(new Triangle(new Vertex(-300, -100, -100),
+							new Vertex(-300, 100, -100),
+							new Vertex(300, 0, 100),
+							Color.PINK));
 				// Получаем значения ползунков
 				double heading = Math.toRadians(headingSlider.getValue());
 				double pitch = Math.toRadians(pitchSlider.getValue());
@@ -69,7 +73,7 @@ public class DemoViewer {
 				BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
 				g2.translate(getWidth() / 2, getHeight() / 2);
 
-				//ГЛАВНЫЙ МЕТОД ОТРИСОВКИ - МОЙ
+/*				//ГЛАВНЫЙ МЕТОД ОТРИСОВКИ - МОЙ
 				g2.setColor(Color.WHITE);
 				// Первый проход - преобразования из 3Д в 2Д и отправка в список
 				List<PolygonWrapper> polys = new ArrayList<>();
@@ -122,7 +126,7 @@ public class DemoViewer {
 					g2.draw(path);
 				}// */
 
-/*			//DRAWING CORE FOR SOLID GRAPHICS
+				//DRAWING CORE FOR SOLID GRAPHICS
 				double[] zBuffer = new double[img.getWidth() * img.getHeight()];
 				for (int q = 0; q < zBuffer.length; q++) {
 					zBuffer[q] = Double.NEGATIVE_INFINITY;
@@ -167,6 +171,8 @@ public class DemoViewer {
 							double b2 = ((y - v1.y) * (v3.x - v1.x) + (v3.y - v1.y) * (v1.x - x)) / triangleArea;
 							double b3 = ((y - v2.y) * (v1.x - v2.x) + (v1.y - v2.y) * (v2.x - x)) / triangleArea;
 							if (b1 >= 0 && b1 <= 1 && b2 >= 0 && b2 <= 1 && b3 >= 0 && b3 <= 1) {
+								// Глубина каждого пикселя определяется путем умножения 
+								// барицентрических координат на координаты углов
 								double depth = b1 * v1.z + b2 * v2.z + b3 * v3.z;
 								int zIndex = y * img.getWidth() + x;
 								if (zBuffer[zIndex] < depth) {
@@ -221,8 +227,8 @@ public class DemoViewer {
 		}
 		for (Triangle t : result) {
 			for (Vertex v : new Vertex[] { t.v1, t.v2, t.v3 }) {
-				//double l = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z) / Math.sqrt(30000);
-				double l = Math.sqrt(0.2 * v.x * v.x + 2 *  v.y * v.y + v.z * v.z) / Math.sqrt(50000);
+				double l = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z) / Math.sqrt(30000);
+				//double l = Math.sqrt(0.2 * v.x * v.x + 2 *  v.y * v.y + v.z * v.z) / Math.sqrt(50000);
 				v.x /= l;
 				v.y /= l;
 				v.z /= l;
