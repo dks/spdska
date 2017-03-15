@@ -209,8 +209,8 @@ public class DemoViewer {
 		int green = (int) Math.pow(greenLinear, 1/2.4);
 		int blue = (int) Math.pow(blueLinear, 1/2.4);
 		/* int red = (int) (color.getRed() * shade);
-    int green = (int) (color.getGreen() * shade);
-    int blue = (int) (color.getBlue() * shade); */
+    		int green = (int) (color.getGreen() * shade);
+		int blue = (int) (color.getBlue() * shade); */
 		return new Color(red, green, blue);
 	}
 
