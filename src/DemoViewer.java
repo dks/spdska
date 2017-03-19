@@ -1,4 +1,5 @@
 /* vim: set tabstop=2: */
+/* vim: set softtabstop=2: */
 /* vim: set shiftwidth=2: */
 
 import javax.swing.*;
@@ -70,7 +71,8 @@ public class DemoViewer {
 				// Задаем общую матрицу поворота
 				Matrix3 transform = headingTransform.multiply(pitchTransform);
 				// Инициализируем видеобуфер
-				BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+				BufferedImage img = new BufferedImage(getWidth() 
+					, getHeight(), BufferedImage.TYPE_INT_ARGB);
 				g2.translate(getWidth() / 2, getHeight() / 2);
 
 /*				//ГЛАВНЫЙ МЕТОД ОТРИСОВКИ - МОЙ
@@ -150,7 +152,8 @@ public class DemoViewer {
 					Vertex norm = new Vertex(ab.y * ac.z - ab.z * ac.y,
 						ab.z * ac.x - ab.x * ac.z,
 						ab.x * ac.y - ab.y * ac.x);
-					double normalLength = Math.sqrt(norm.x * norm.x + norm.y * norm.y + norm.z * norm.z);
+					double normalLength = Math.sqrt(norm.x * norm.x + norm.y * norm.y 
+						+ norm.z * norm.z);
 					norm.x /= normalLength;
 					norm.y /= normalLength;
 					norm.z /= normalLength;
@@ -158,18 +161,26 @@ public class DemoViewer {
 					// так как наш источник света идет из (0,0,1) изменяется только одна величина
 					double angleCos = Math.abs(norm.z);
 					// Определение прямоугольных границ расчитываемых треугольников
-					int minX = (int) Math.max(0, Math.ceil(Math.min(v1.x, Math.min(v2.x, v3.x))));
-					int maxX = (int) Math.min(img.getWidth()-1, Math.floor(Math.max(v1.x, Math.max(v2.x, v3.x))));
-					int minY = (int) Math.max(0, Math.ceil(Math.min(v1.y, Math.min(v2.y, v3.y))));
-					int maxY = (int) Math.min(img.getHeight()-1, Math.floor(Math.max(v1.y, Math.max(v2.y, v3.y))));
-					double triangleArea = (v1.y - v3.y) * (v2.x - v3.x) + (v2.y - v3.y) * (v3.x - v1.x);
+					int minX = (int) Math.max(0, Math.ceil(Math.min(v1.x
+						, Math.min(v2.x, v3.x))));
+					int maxX = (int) Math.min(img.getWidth()-1, Math.floor(Math.max(v1.x
+						, Math.max(v2.x, v3.x))));
+					int minY = (int) Math.max(0, Math.ceil(Math.min(v1.y
+						, Math.min(v2.y, v3.y))));
+					int maxY = (int) Math.min(img.getHeight()-1, Math.floor(Math.max(v1.y
+						, Math.max(v2.y, v3.y))));
+					double triangleArea = (v1.y - v3.y) * (v2.x - v3.x) 
+						+ (v2.y - v3.y) * (v3.x - v1.x);
 					// Основной цикл рендеринга
 					// Построчная развертка по пикселям в границах прямоугольников рассчитанных выше
 					for (int y = minY; y <= maxY; y++) {
 						for (int x = minX; x <= maxX; x++) {
-							double b1 = ((y - v3.y) * (v2.x - v3.x) + (v2.y - v3.y) * (v3.x - x)) / triangleArea;
-							double b2 = ((y - v1.y) * (v3.x - v1.x) + (v3.y - v1.y) * (v1.x - x)) / triangleArea;
-							double b3 = ((y - v2.y) * (v1.x - v2.x) + (v1.y - v2.y) * (v2.x - x)) / triangleArea;
+							double b1 = ((y - v3.y) * (v2.x - v3.x) 
+								+ (v2.y - v3.y) * (v3.x - x)) / triangleArea;
+							double b2 = ((y - v1.y) * (v3.x - v1.x) 
+								+ (v3.y - v1.y) * (v1.x - x)) / triangleArea;
+							double b3 = ((y - v2.y) * (v1.x - v2.x) 
+								+ (v1.y - v2.y) * (v2.x - x)) / triangleArea;
 							if (b1 >= 0 && b1 <= 1 && b2 >= 0 && b2 <= 1 && b3 >= 0 && b3 <= 1) {
 								// Глубина каждого пикселя определяется путем умножения 
 								// барицентрических координат на координаты углов
@@ -209,7 +220,7 @@ public class DemoViewer {
 		int green = (int) Math.pow(greenLinear, 1/2.4);
 		int blue = (int) Math.pow(blueLinear, 1/2.4);
 		/* int red = (int) (color.getRed() * shade);
-    		int green = (int) (color.getGreen() * shade);
+    int green = (int) (color.getGreen() * shade);
 		int blue = (int) (color.getBlue() * shade); */
 		return new Color(red, green, blue);
 	}
@@ -217,9 +228,12 @@ public class DemoViewer {
 	public static List<Triangle> inflate(List<Triangle> tris) {
 		List<Triangle> result = new ArrayList<>();
 		for (Triangle t : tris) {
-			Vertex m1 = new Vertex((t.v1.x + t.v2.x)/2, (t.v1.y + t.v2.y)/2, (t.v1.z + t.v2.z)/2);
-			Vertex m2 = new Vertex((t.v2.x + t.v3.x)/2, (t.v2.y + t.v3.y)/2, (t.v2.z + t.v3.z)/2);
-			Vertex m3 = new Vertex((t.v1.x + t.v3.x)/2, (t.v1.y + t.v3.y)/2, (t.v1.z + t.v3.z)/2);
+			Vertex m1 = new Vertex((t.v1.x + t.v2.x)/2, (t.v1.y + t.v2.y)/2
+				, (t.v1.z + t.v2.z)/2);
+			Vertex m2 = new Vertex((t.v2.x + t.v3.x)/2, (t.v2.y + t.v3.y)/2
+				, (t.v2.z + t.v3.z)/2);
+			Vertex m3 = new Vertex((t.v1.x + t.v3.x)/2, (t.v1.y + t.v3.y)/2
+				, (t.v1.z + t.v3.z)/2);
 			result.add(new Triangle(t.v1, m1, m3, t.color));
 			result.add(new Triangle(t.v2, m1, m2, t.color));
 			result.add(new Triangle(t.v3, m2, m3, t.color));
