@@ -83,10 +83,28 @@ public class MyDemo {
 					path.lineTo(v2.x, v2.y);
 					path.closePath();
 					g2.draw(path);
-					g2.drawOval( (int) (v1.x-c.r1/2), (int) (v1.y-c.r1/2)
-						, (int) c.r1, (int) c.r1);
-					g2.drawOval( (int) (v2.x-c.r2/2), (int) (v2.y-c.r2/2)
-						, (int) c.r2, (int) c.r2);
+					// Вместо нормали - задающий вектор (ось цилиндра)
+					Vertex n = new Vertex(v2.x-v1.x, v2.y-v1.y, v2.z-v1.z);
+					Vertex ls = new Vertex(0,0,1); // Вектор "от зрителя"
+					Vertex rg = new Vertex(1,0,0); // Вектор отсчета вращения
+					double cos = Math.abs( (ls.x*n.x+ls.y*n.y+ls.z*n.z)/
+						(Math.sqrt(ls.x*ls.x+ls.y*ls.y+ls.z*ls.z)
+						*Math.sqrt(n.x*n.x+n.y*n.y+n.z*n.z)) );
+					double rot2d = Math.abs( (rg.x*n.x+rg.y*n.y)/
+						(Math.sqrt(rg.x*rg.x+rg.y*rg.y)
+						*Math.sqrt(n.x*n.x+n.y*n.y)) );
+					g2.drawString(Double.toString(rot2d),0,0);
+					
+					AffineTransform old = g2.getTransform();
+					int w1 = (int)c.d1;
+					int w2 = (int)c.d2;
+					int h1 = (int)(c.d1*cos);
+					int h2 = (int)(c.d2*cos);
+					g2.translate(v1.x,v1.y);
+					g2.rotate(1-rot2d);
+					g2.drawOval((int)(v1.x-w1/2),(int)(v1.y-h1/2),w1,h1);
+					//g2.drawOval((int)(v2.x-w2/2),(int)(v2.y-h2/2),w2,h2);
+					g2.setTransform(old);
 				}// */
 
 				g2.drawImage(img, 0, 0, null);
@@ -143,14 +161,14 @@ class Triangle {
 class Cone {
 	Vertex v1;
 	Vertex v2;
-	double r1;
-	double r2;
+	double d1;
+	double d2;
 	Color color;
-	Cone(Vertex v1, Vertex v2, double r1, double r2, Color color) {
+	Cone(Vertex v1, Vertex v2, double d1, double d2, Color color) {
 		this.v1 = v1;
 		this.v2 = v2;
-		this.r1 = r1;
-		this.r2 = r2;
+		this.d1 = d1;
+		this.d2 = d2;
 		this.color = color;
 	}
 }
