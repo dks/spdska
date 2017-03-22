@@ -84,26 +84,35 @@ public class MyDemo {
 					path.closePath();
 					g2.draw(path);
 					// Вместо нормали - задающий вектор (ось цилиндра)
-					Vertex n = new Vertex(v2.x-v1.x, v2.y-v1.y, v2.z-v1.z);
+					// Vertex n = new Vertex(v2.x-v1.x, v2.y-v1.y, v2.z-v1.z);
+					// Вместо нормали - Радиус вектор точки 1
+					Vertex n = new Vertex(v1.x, v1.y, v1.z);
 					Vertex ls = new Vertex(0,0,1); // Вектор "от зрителя"
 					Vertex rg = new Vertex(1,0,0); // Вектор отсчета вращения
 					double cos = Math.abs( (ls.x*n.x+ls.y*n.y+ls.z*n.z)/
 						(Math.sqrt(ls.x*ls.x+ls.y*ls.y+ls.z*ls.z)
 						*Math.sqrt(n.x*n.x+n.y*n.y+n.z*n.z)) );
-					double rot2d = Math.abs( (rg.x*n.x+rg.y*n.y)/
-						(Math.sqrt(rg.x*rg.x+rg.y*rg.y)
-						*Math.sqrt(n.x*n.x+n.y*n.y)) );
-					g2.drawString(Double.toString(rot2d),0,0);
 					
-					AffineTransform old = g2.getTransform();
 					int w1 = (int)c.d1;
 					int w2 = (int)c.d2;
 					int h1 = (int)(c.d1*cos);
 					int h2 = (int)(c.d2*cos);
+
+					AffineTransform old = g2.getTransform();
 					g2.translate(v1.x,v1.y);
-					g2.rotate(1-rot2d);
-					g2.drawOval((int)(v1.x-w1/2),(int)(v1.y-h1/2),w1,h1);
-					//g2.drawOval((int)(v2.x-w2/2),(int)(v2.y-h2/2),w2,h2);
+					g2.rotate(-Math.atan2(v1.x,v1.y));
+					g2.setColor(Color.CYAN);
+					g2.draw(new Line2D.Double(0,0,0,0));
+					g2.setColor(Color.RED);
+					g2.drawOval((int)(-w1/2),(int)(-h1/2),w1,h1);
+					g2.setTransform(old);
+
+					g2.translate(v2.x,v2.y);
+					g2.rotate(-Math.atan2(v2.x,v2.y));
+					g2.setColor(Color.CYAN);
+					g2.draw(new Line2D.Double(0,0,0,0));
+					g2.setColor(Color.RED);
+					g2.drawOval((int)(-w2/2),(int)(-h2/2),w2,h2);
 					g2.setTransform(old);
 				}// */
 
