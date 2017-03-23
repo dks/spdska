@@ -38,7 +38,7 @@ public class MyDemo {
 
 				List<Cone> conlist = new ArrayList<>();
 				conlist.add(new Cone(new Vertex(0, 0, 100),
-					new Vertex(0, 0, -100), 100.0, 100.0, Color.RED));
+					new Vertex(0, 0, -100), 100.0, 60.0, Color.RED));
 				// Получаем значения ползунков
 				double heading = Math.toRadians(headingSlider.getValue());
 				double pitch = Math.toRadians(pitchSlider.getValue());
@@ -103,6 +103,8 @@ public class MyDemo {
 					g2.rotate(-Math.atan2(v1.x,v1.y));
 					g2.setColor(Color.CYAN);
 					g2.draw(new Line2D.Double(0,0,0,0));
+					g2.draw(new Line2D.Double(-w1/2,0,w1/2,0));
+					g2.draw(new Line2D.Double(0,-h1/2,0,h1/2));
 					g2.setColor(Color.RED);
 					g2.drawOval((int)(-w1/2),(int)(-h1/2),w1,h1);
 					g2.setTransform(old);
@@ -114,6 +116,11 @@ public class MyDemo {
 					g2.setColor(Color.RED);
 					g2.drawOval((int)(-w2/2),(int)(-h2/2),w2,h2);
 					g2.setTransform(old);
+	
+					g2.setColor(Color.GREEN);
+					g2.draw(new Line2D.Double(v1.x-w1/2,v1.y,v2.x-w2/2,v2.y));
+					//g2.draw(new Line2D.Double(v1.x-w1/2,v1.y-h1/2,v2.x-w2/2,v2.y-h2/2));
+
 				}// */
 
 				g2.drawImage(img, 0, 0, null);
