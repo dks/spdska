@@ -103,8 +103,8 @@ public class MyDemo {
 					g2.rotate(-Math.atan2(v1.x,v1.y));
 					g2.setColor(Color.CYAN);
 					g2.draw(new Line2D.Double(0,0,0,0));
-					g2.draw(new Line2D.Double(-w1/2,0,w1/2,0));
-					g2.draw(new Line2D.Double(0,-h1/2,0,h1/2));
+					//g2.draw(new Line2D.Double(-w1/2,0,w1/2,0));
+					//g2.draw(new Line2D.Double(0,-h1/2,0,h1/2));
 					g2.setColor(Color.RED);
 					g2.drawOval((int)(-w1/2),(int)(-h1/2),w1,h1);
 					g2.setTransform(old);
@@ -117,9 +117,18 @@ public class MyDemo {
 					g2.drawOval((int)(-w2/2),(int)(-h2/2),w2,h2);
 					g2.setTransform(old);
 	
+					double alpha = -Math.atan2(v1.x,v1.y);
+					int c1Lx = (int) (v1.x - ( (w1/2) * Math.cos(alpha)) );
+					int c1Ly = (int) (v1.y - ( (w1/2) * Math.sin(alpha)) );
+					int c2Lx = (int) (v2.x - ( (w2/2) * Math.cos(alpha)) );
+					int c2Ly = (int) (v2.y - ( (w2/2) * Math.sin(alpha)) );
+					int c1Rx = (int) (v1.x + ( (w1/2) * Math.cos(alpha)) );
+					int c1Ry = (int) (v1.y + ( (w1/2) * Math.sin(alpha)) );
+					int c2Rx = (int) (v2.x + ( (w2/2) * Math.cos(alpha)) );
+					int c2Ry = (int) (v2.y + ( (w2/2) * Math.sin(alpha)) );
 					g2.setColor(Color.GREEN);
-					g2.draw(new Line2D.Double(v1.x-w1/2,v1.y,v2.x-w2/2,v2.y));
-					//g2.draw(new Line2D.Double(v1.x-w1/2,v1.y-h1/2,v2.x-w2/2,v2.y-h2/2));
+					g2.draw(new Line2D.Double(c1Lx,c1Ly,c2Lx,c2Ly));
+					g2.draw(new Line2D.Double(c1Rx,c1Ry,c2Rx,c2Ry));
 
 				}// */
 
