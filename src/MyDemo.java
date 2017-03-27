@@ -38,7 +38,7 @@ public class MyDemo {
 
 				List<Cone> conlist = new ArrayList<>();
 				conlist.add(new Cone(new Vertex(0, 0, 100),
-					new Vertex(0, 0, -100), 100.0, 60.0, Color.RED));
+					new Vertex(0, 0, -100), 100.0, 100.0, Color.RED));
 				// Получаем значения ползунков
 				double heading = Math.toRadians(headingSlider.getValue());
 				double pitch = Math.toRadians(pitchSlider.getValue());
@@ -82,7 +82,7 @@ public class MyDemo {
 					path.moveTo(v1.x, v1.y);
 					path.lineTo(v2.x, v2.y);
 					path.closePath();
-					g2.draw(path);
+//					g2.draw(path);
 					// Вместо нормали - задающий вектор (ось цилиндра)
 					// Vertex n = new Vertex(v2.x-v1.x, v2.y-v1.y, v2.z-v1.z);
 					// Вместо нормали - Радиус вектор точки 1
@@ -106,7 +106,9 @@ public class MyDemo {
 					//g2.draw(new Line2D.Double(-w1/2,0,w1/2,0));
 					//g2.draw(new Line2D.Double(0,-h1/2,0,h1/2));
 					g2.setColor(Color.RED);
-					g2.drawOval((int)(-w1/2),(int)(-h1/2),w1,h1);
+					if (v1.z>0) g2.drawOval((int)(-w1/2),(int)(-h1/2),w1,h1);
+					g2.setColor(Color.GREEN);
+					g2.drawArc( (int)(-w1/2),(int)(-h1/2),w1,h1,180,180);
 					g2.setTransform(old);
 
 					g2.translate(v2.x,v2.y);
@@ -114,7 +116,9 @@ public class MyDemo {
 					g2.setColor(Color.CYAN);
 					g2.draw(new Line2D.Double(0,0,0,0));
 					g2.setColor(Color.RED);
-					g2.drawOval((int)(-w2/2),(int)(-h2/2),w2,h2);
+					if (v2.z>0) g2.drawOval((int)(-w2/2),(int)(-h2/2),w2,h2);
+					g2.setColor(Color.GREEN);
+					g2.drawArc( (int)(-w2/2),(int)(-h2/2),w2,h2,180,180);
 					g2.setTransform(old);
 	
 					double alpha = -Math.atan2(v1.x,v1.y);
@@ -130,6 +134,7 @@ public class MyDemo {
 					g2.draw(new Line2D.Double(c1Lx,c1Ly,c2Lx,c2Ly));
 					g2.draw(new Line2D.Double(c1Rx,c1Ry,c2Rx,c2Ry));
 
+					//g2.drawString(Double.toString(v1.z),0,0);
 				}// */
 
 				g2.drawImage(img, 0, 0, null);
