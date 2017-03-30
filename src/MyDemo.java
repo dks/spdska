@@ -134,6 +134,11 @@ public class MyDemo {
 					g2.draw(new Line2D.Double(c1Lx,c1Ly,c2Lx,c2Ly));
 					g2.draw(new Line2D.Double(c1Rx,c1Ry,c2Rx,c2Ry));
 
+					//g2.setColor(Color.YELLOW);
+					//QuadCurve2D q = new QuadCurve2D.Float();
+					//q.setCurve(c1Lx,c1Ly,v1.x,v1.y-h1,c1Rx,c1Ry);
+					//g2.draw(q);
+
 					//g2.drawString(Double.toString(v1.z),0,0);
 				}// */
 
