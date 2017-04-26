@@ -37,7 +37,7 @@ public class Mainframe{
 			int mww = mfsize.width - mwi.left - mwi.right;
 			int mwh = mfsize.height - mwi.top - mwi.bottom;
 			//jint.setSize(mww/3,mwh);
-			jint.setBounds(mww/3*2,bounds.y,mww/3,mwh);
+			jint.setBounds(mww/3*2,0,mww/3,mwh);
 			((BasicInternalFrameUI) jint.getUI()).setNorthPane(null);
 			jint.setBorder(null);
 			jint.setBackground(Color.BLACK);
