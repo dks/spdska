@@ -5,5 +5,5 @@ rm -fr cla/*
 #javac -cp cla -d cla -sourcepath src src/MyDemo.java
 #java -cp cla MyDemo
 
-javac -cp cla -d cla -sourcepath src src/Mainframe.java 
-java -cp cla Mainframe
+javac -cp cla -d cla -sourcepath src src/Start.java
+java -cp cla Start
