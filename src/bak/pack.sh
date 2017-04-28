@@ -1,1 +1,1 @@
-jar cvfe Converter.jar dk_gui.Start -C cla .
+jar cvfe spdska.jar Start -C cla .

@@ -4,13 +4,14 @@
 
 package dk_gui;
 
+import dk_util.Bund;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 public class Mainframe{
 	public Mainframe(){
-		JFrame jf = new JFrame("SPDSKA");
+		JFrame jf = new JFrame(Bund.p("progname"));
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.setVisible(true);
 		// SET SIZE ROUTINE START
