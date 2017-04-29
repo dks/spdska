@@ -20,11 +20,21 @@ public class Bund{
 	}
 
 	public static String p(String s){
-		return rb.getString(s);
+		String req = "?";
+		try {
+			req = rb.getString(s);
+		} catch (NullPointerException e){
+			Post.msg("ERROR(2): Попытка получить значение из несуществующего набора ресурсов!");
+		}
+		return req;
 	}
 
 	public static void resetBundle(){
-		rb = ResourceBundle.getBundle("i18n/MB", myloc);  
+		try{
+			rb = ResourceBundle.getBundle("i18n/MB", myloc);  
+		} catch (MissingResourceException e){
+			Post.msg("ERROR(1): Отсутствует файл набора ресурсов для локализации!");
+		}
 	}
 
 	public static void setLocale(String l){

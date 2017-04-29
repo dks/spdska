@@ -4,7 +4,7 @@
 
 package dk_gui;
 
-import dk_util.Bund;
+import dk_util.*;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
@@ -41,19 +41,10 @@ public class Mainframe{
 		((BasicInternalFrameUI) jint.getUI()).setNorthPane(null);
 		jint.setBorder(null);
 		jint.setBackground(Color.BLACK);
-		JLabel statusWindow = new JLabel();
+		JLabel statusWindow = Log.getStatusWindow();
 		statusWindow.setForeground(Color.YELLOW);
 		jint.setLayout(new BorderLayout());
 		jint.add(statusWindow,BorderLayout.NORTH);
 		jint.setVisible(true);
-
-		statusWindow.setText("<html></html>");
-		StringBuffer sb = new StringBuffer(statusWindow.getText());
-		sb.insert(sb.length()-7,"Подготовка к работе программы..."+"<br>");
-		statusWindow.setText(sb.toString());
-		sb.insert(sb.length()-7,"Подключение к базе данных..."+"<br>");
-		statusWindow.setText(sb.toString());
-		sb.insert(sb.length()-7,"Подключение установлено!"+"<br>");
-		statusWindow.setText(sb.toString());
 	}
 }
