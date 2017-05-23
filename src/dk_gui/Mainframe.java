@@ -29,6 +29,8 @@ public class Mainframe{
 		jf.setContentPane(desktop);
 		desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
 		desktop.setBackground(Color.GRAY);
+
+		// 1. ADD STATUS WINDOW - START
 		JInternalFrame jint = new JInternalFrame();
 		//JInternalFrame jint = new JInternalFrame("Status",true,true,true,true);
 		desktop.add(jint);
@@ -46,5 +48,16 @@ public class Mainframe{
 		jint.setLayout(new BorderLayout());
 		jint.add(statusWindow,BorderLayout.NORTH);
 		jint.setVisible(true);
+		// 1. ADD STATUS WINDOW - END
+
+		// 2. ADD 3D VIEWPORT - START
+		JInternalFrame vp3d = new JInternalFrame("3D",true,true,true,true);
+		desktop.add(vp3d);
+		vp3d.setBounds(0,0,mww/3,mwh/2);
+		vp3d.setVisible(true);
+		ViewPort3d.setViewPort3d((Container)vp3d.getContentPane());
+
+
+
 	}
 }

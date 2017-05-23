@@ -12,7 +12,7 @@ public class H2DB{
 			Connection conn = DriverManager.getConnection("jdbc:h2:../res/test","sa","");
 			Statement s = conn.createStatement();
 //			s.execute("DROP TABLE data;");
-//			s.execute("CREATE TABLE data(id int AUTO_INCREMENT primary key,txt VARCHAR(5));");
+			s.execute("CREATE TABLE IF NOT EXISTS data(id int AUTO_INCREMENT primary key,txt VARCHAR(5));");
 			s.executeUpdate("INSERT INTO data VALUES (null,'TEST');");
 			ResultSet rs = s.executeQuery("SELECT * FROM data;");
 			while(rs.next()){
