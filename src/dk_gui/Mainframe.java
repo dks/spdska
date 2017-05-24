@@ -51,13 +51,19 @@ public class Mainframe{
 		// 1. ADD STATUS WINDOW - END
 
 		// 2. ADD 3D VIEWPORT - START
-		JInternalFrame vp3d = new JInternalFrame("3D",true,true,true,true);
+		ViewPort3d vp3d = new ViewPort3d();
 		desktop.add(vp3d);
 		vp3d.setBounds(0,0,mww/3,mwh/2);
 		vp3d.setVisible(true);
-		ViewPort3d.setViewPort3d((Container)vp3d.getContentPane());
+		// 2. ADD 3D VIEWPORT - END
 
-
+		// 3. ADD 3D VIEWPORT - START
+		ViewPort3d vp3d2 = new ViewPort3d();
+		desktop.add(vp3d2);
+		vp3d2.setBounds(mww/3,0,mww/3,mwh/2);
+		vp3d2.setVisible(true);
+		// 3. ADD 3D VIEWPORT - END
+		
 
 	}
 }

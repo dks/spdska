@@ -4,6 +4,7 @@
 
 package dk_gui;
 
+import dk_ge.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -14,11 +15,20 @@ import java.awt.image.BufferedImage;
 import java.awt.event.*;
 import javax.swing.event.*;
 
-public class ViewPort3d {
-  public static JSlider headingSlider = new JSlider(-180, 180, 0);
-	public static	JSlider pitchSlider = new JSlider(SwingConstants.VERTICAL, -90, 90, 0);
-	public static JPanel renderPanel;
-	public static void setViewPort3d(Container pane) {
+public class ViewPort3d extends JInternalFrame {
+  public JSlider headingSlider = new JSlider(-180, 180, 0);
+	public JSlider pitchSlider = new JSlider(SwingConstants.VERTICAL, -90, 90, 0);
+	public JPanel renderPanel;
+
+	public ViewPort3d(){
+		//JInternalFrame vp3d = new JInternalFrame("3D",true,true,true,true);
+		super("3D",true,true,true,true);
+		//super();
+		setViewPort3d((Container)this.getContentPane());
+
+	}
+
+	public void setViewPort3d(Container pane) {
 		//Container pane = frame.getContentPane();
 		pane.setLayout(new BorderLayout());
 		pane.add(headingSlider, BorderLayout.SOUTH);
@@ -166,93 +176,4 @@ public class ViewPort3d {
 		return new Color(red, green, blue);
 	}
 
-}
-
-class Vertex {
-    double x;
-    double y;
-    double z;
-    Vertex(double x, double y, double z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-}
-
-class Triangle {
-    Vertex v1;
-    Vertex v2;
-    Vertex v3;
-    Color color;
-    Triangle(Vertex v1, Vertex v2, Vertex v3, Color color) {
-        this.v1 = v1;
-        this.v2 = v2;
-        this.v3 = v3;
-        this.color = color;
-    }
-}
-class Cone {
-	Vertex v1;
-	Vertex v2;
-	double d1;
-	double d2;
-	Color color;
-	Cone(Vertex v1, Vertex v2, double d1, double d2, Color color) {
-		this.v1 = v1;
-		this.v2 = v2;
-		this.d1 = d1;
-		this.d2 = d2;
-		this.color = color;
-	}
-}
-
-class Matrix3 {
-	double[] values;
-	Matrix3(double[] values) {
-		this.values = values;
-	}
-	Matrix3 multiply(Matrix3 other) {
-		double[] result = new double[9];
-		for (int row = 0; row < 3; row++) {
-			for (int col = 0; col < 3; col++) {
-				for (int i = 0; i < 3; i++) {
-					result[row * 3 + col] +=
-						this.values[row * 3 + i] * other.values[i * 3 + col];
-				}
-			}
-		}
-		return new Matrix3(result);
-	}
-	Vertex transform(Vertex in) {
-		return new Vertex(
-				in.x * values[0] + in.y * values[3] + in.z * values[6],
-				in.x * values[1] + in.y * values[4] + in.z * values[7],
-				in.x * values[2] + in.y * values[5] + in.z * values[8]
-				);
-	}
-}
-
-class PolygonWrapper implements Comparable<PolygonWrapper>{
-	private Polygon pol;
-	private int Z;
-	private Color col;
-
-	public PolygonWrapper(int Z, Polygon pol, Color col){
-		this.pol = pol;
-		this.Z = Z;
-		this.col = col;
-	}
-
-	public int getZ(){ return Z; }
-	public Color getColor(){ return col; }
-	public Polygon getPolygon(){ return pol; }
-
-	@Override
-	public int compareTo(PolygonWrapper pw){
-		return (this.getZ() < pw.getZ() ? -1 : (this.getZ() == pw.getZ() ? 0 : 1));
-	}
-	@Override
-	public String toString(){
-		return "Poligon: Z-ind="+this.getZ()+"; coords: "+pol.xpoints[0]+", "+pol.ypoints[0]+"; "+pol.xpoints[1]+", "+pol.ypoints[1]+"; "+pol.xpoints[2]+", "+pol.ypoints[2]+"; ";
-	}
 }
