@@ -9,7 +9,7 @@ public class H2DB{
 		if (instance == null) { instance = new H2DB(); } 
 		try{
 			Class.forName("org.h2.Driver");
-			Connection conn = DriverManager.getConnection("jdbc:h2:../res/test","sa","");
+			Connection conn = DriverManager.getConnection("jdbc:h2:res/test","sa","");
 			Statement s = conn.createStatement();
 //			s.execute("DROP TABLE data;");
 			s.execute("CREATE TABLE IF NOT EXISTS data(id int AUTO_INCREMENT primary key,txt VARCHAR(5));");

@@ -4,6 +4,7 @@
 
 package dk_gui;
 
+import dk_ge.*;
 import dk_util.*;
 import java.awt.*;
 import javax.swing.*;
@@ -39,7 +40,7 @@ public class Mainframe{
 		int mww = mfsize.width - mwi.left - mwi.right;
 		int mwh = mfsize.height - mwi.top - mwi.bottom;
 		//jint.setSize(mww/3,mwh);
-		jint.setBounds(mww/3*2,0,mww/3,mwh);
+		jint.setBounds(0,0,mww/3,mwh);
 		((BasicInternalFrameUI) jint.getUI()).setNorthPane(null);
 		jint.setBorder(null);
 		jint.setBackground(Color.BLACK);
@@ -53,14 +54,14 @@ public class Mainframe{
 		// 2. ADD 3D VIEWPORT - START
 		ViewPort3d vp3d = new ViewPort3d();
 		desktop.add(vp3d);
-		vp3d.setBounds(0,0,mww/3,mwh/2);
+		vp3d.setBounds(mww/3,0,mww/3,mwh/2);
 		vp3d.setVisible(true);
 		// 2. ADD 3D VIEWPORT - END
 
 		// 3. ADD 3D VIEWPORT - START
 		ViewPort3d vp3d2 = new ViewPort3d();
 		desktop.add(vp3d2);
-		vp3d2.setBounds(mww/3,0,mww/3,mwh/2);
+		vp3d2.setBounds(mww/3*2,0,mww/3,mwh/2);
 		vp3d2.setVisible(true);
 		// 3. ADD 3D VIEWPORT - END
 		
