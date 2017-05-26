@@ -63,7 +63,7 @@ public class ViewPort3d extends JInternalFrame {
 					new Vertex(100, -100, -100),
 					new Vertex(-100, -100, 100),
 					Color.BLUE));
-		for (int i = 0; i < 4; i++) { tris = inflate(tris); }
+		//for (int i = 0; i < 3; i++) { tris = inflate(tris); }
 		tris.add(new Triangle(new Vertex(-300, -100, -100),
 					new Vertex(-300, 100, -100),
 					new Vertex(300, 0, 100),
@@ -179,14 +179,12 @@ public class ViewPort3d extends JInternalFrame {
 		}
 	}
 
+	// Main Rendering Method - Solid Style
 	void renderSolid(Graphics2D g2){
 		BufferedImage img = new BufferedImage(getWidth() 
 			, getHeight(), BufferedImage.TYPE_INT_ARGB);
-		//DRAWING CORE FOR SOLID GRAPHICS
 		double[] zBuffer = new double[img.getWidth() * img.getHeight()];
-		for (int q = 0; q < zBuffer.length; q++) {
-			zBuffer[q] = Double.NEGATIVE_INFINITY;
-		}
+		for (int q = 0; q < zBuffer.length; q++) { zBuffer[q] = Double.NEGATIVE_INFINITY;	}
 		g2.translate(-getWidth() / 2,-getHeight() / 2);
 		for (Triangle t : tris) { 
 			// Поворот вершин
@@ -243,12 +241,7 @@ public class ViewPort3d extends JInternalFrame {
 						if (zBuffer[zIndex] < depth) {
 							img.setRGB(x, y, getShade(t.color, angleCos).getRGB());
 							zBuffer[zIndex] = depth;
-						}
-					}
-				}
-			}
-		}//End of main solid graphics loop */
-		// Print buffer to screen
+		}}}}}
 		g2.drawImage(img, 0, 0, null);
 	}
 
@@ -262,29 +255,21 @@ public class ViewPort3d extends JInternalFrame {
 				Graphics2D g2 = (Graphics2D) g;
 				g2.setColor(Color.BLACK);
 				g2.fillRect(0, 0, getWidth(), getHeight());
-				//BufferedImage img = new BufferedImage(getWidth() 
-				//	, getHeight(), BufferedImage.TYPE_INT_ARGB);
 				g2.translate(getWidth() / 2, getHeight() / 2);
-
 				matrixPreCalc();
-				
 				switch(rt){
 					case HIDDEN: renderHidden(g2); break;
 					case MESHED: renderMeshed(g2); break;
-					case SOLID: renderSolid(g2); break;
-				}
-
-				//g2.drawImage(img, 0, 0, null);
-			}
-		};
+					case SOLID:  renderSolid(g2); break;
+		}}};
 		
 		pane.add(renderPanel, BorderLayout.CENTER);
 		headingSlider.addChangeListener(new ChangeListener(){
-			public void stateChanged(ChangeEvent e){renderPanel.repaint();}
-		});
+			public void stateChanged(ChangeEvent e){renderPanel.repaint();
+		}});
 		pitchSlider.addChangeListener(new ChangeListener(){
-			public void stateChanged(ChangeEvent e){renderPanel.repaint();}
-		});
+			public void stateChanged(ChangeEvent e){renderPanel.repaint();
+		}});
 	}
 
 	public static List<Triangle> inflate(List<Triangle> tris) {
