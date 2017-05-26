@@ -51,19 +51,22 @@ public class Mainframe{
 		jint.setVisible(true);
 		// 1. ADD STATUS WINDOW - END
 
-		// 2. ADD 3D VIEWPORT - START
-		ViewPort3d vp3d = new ViewPort3d();
+		// 2. ADD 3D VIEWPORTS - START
+		ViewPort3d vp3d = new ViewPort3d(ViewPort3d.RenderType.MESHED);
 		desktop.add(vp3d);
 		vp3d.setBounds(mww/3,0,mww/3,mwh/2);
 		vp3d.setVisible(true);
-		// 2. ADD 3D VIEWPORT - END
 
-		// 3. ADD 3D VIEWPORT - START
-		ViewPort3d vp3d2 = new ViewPort3d();
+		ViewPort3d vp3d2 = new ViewPort3d(ViewPort3d.RenderType.HIDDEN);
 		desktop.add(vp3d2);
 		vp3d2.setBounds(mww/3*2,0,mww/3,mwh/2);
 		vp3d2.setVisible(true);
-		// 3. ADD 3D VIEWPORT - END
+
+		ViewPort3d vp3d3 = new ViewPort3d(ViewPort3d.RenderType.SOLID);
+		desktop.add(vp3d3);
+		vp3d3.setBounds(mww/3,mwh/2,mww/3,mwh/2);
+		vp3d3.setVisible(true);
+		// 3. ADD 3D VIEWPORTS - END
 		
 
 	}
