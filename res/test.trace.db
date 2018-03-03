@@ -1,0 +1,17 @@
+03-03 18:49:52 jdbc[2]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "TXT VARCHAR(5)": "STRINGDECODE('\u0417\u0434\u0430\u043d\u0438\u0435') (6)"; SQL statement:
+INSERT INTO data2 VALUES (null,'Здание'); [22001-169]
+03-03 18:50:43 jdbc[2]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "TXT VARCHAR(5)": "STRINGDECODE('\u0417\u0434\u0430\u043d\u0438\u0435') (6)"; SQL statement:
+INSERT INTO data2 VALUES (null,'Здание'); [22001-169]
+03-03 18:50:49 jdbc[2]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "TXT VARCHAR(5)": "STRINGDECODE('\u0417\u0434\u0430\u043d\u0438\u0435') (6)"; SQL statement:
+INSERT INTO data2 VALUES (null,'Здание'); [22001-169]
+03-03 18:51:31 jdbc[2]: exception
+org.h2.jdbc.JdbcSQLException: No data is available [2000-169]
+03-03 19:21:50 jdbc[2]: exception
+org.h2.jdbc.JdbcSQLException: Table "DATAREF" not found; SQL statement:
+DROP TABLE dataref; [42102-169]
+03-03 19:22:01 jdbc[2]: exception
+org.h2.jdbc.JdbcSQLException: Table "DATA2" not found; SQL statement:
+DROP TABLE data2; [42102-169]
