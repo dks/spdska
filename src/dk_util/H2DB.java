@@ -12,7 +12,7 @@ public class H2DB{
 			Class.forName("org.h2.Driver");
 			Connection conn = DriverManager.getConnection("jdbc:h2:res/test","sa","");
 			Statement s = conn.createStatement();
-//			s.execute("DROP TABLE data;");
+			s.execute("DROP TABLE data IF EXISTS;");
 			s.execute("CREATE TABLE IF NOT EXISTS data(id int AUTO_INCREMENT primary key,txt VARCHAR(5));");
 			s.executeUpdate("INSERT INTO data VALUES (null,'TEST');");
 			ResultSet rs = s.executeQuery("SELECT * FROM data;");
@@ -37,21 +37,22 @@ public class H2DB{
 			Statement s = conn.createStatement();
       ResultSet rs;
 
-			s.execute("DROP TABLE data2;");
-			s.execute("DROP TABLE dataref;");
-			s.execute("CREATE TABLE IF NOT EXISTS data2(id int AUTO_INCREMENT primary key,txt VARCHAR(50));");
+			s.execute("DROP TABLE data2 IF EXISTS;");
+			s.execute("DROP TABLE dataref IF EXISTS;");
+			s.execute("CREATE TABLE IF NOT EXISTS data2(id int AUTO_INCREMENT"
+        +" primary key, txt VARCHAR(50), objtype smallint unsigned);");
 			s.execute("CREATE TABLE IF NOT EXISTS dataref(chid int ,parid int);");
-			s.executeUpdate("INSERT INTO data2 VALUES (null,'Здание');");
+			s.executeUpdate("INSERT INTO data2 VALUES (null,'Здание',1);");
 			rs = s.executeQuery("SELECT LAST_INSERT_ID();");
 			while(rs.next()){ lastparent = rs.getInt(1); }
       
-      insertObj(lastparent,"Стена1");
-      insertObj(lastparent,"Стена2");
-      insertObj(lastparent,"Стена3");
-      insertObj(lastparent,"Стена4");
-      insertObj(lastparent,"Перекрытие1");
-      insertObj(lastparent,"Перекрытие2");
-      insertObj(lastparent,"Объем1");
+      insertObj(lastparent,"Стена1",2);
+      insertObj(lastparent,"Стена2",2);
+      insertObj(lastparent,"Стена3",2);
+      insertObj(lastparent,"Стена4",2);
+      insertObj(lastparent,"Перекрытие1",3);
+      insertObj(lastparent,"Перекрытие2",3);
+      insertObj(lastparent,"Объем1",4);
       linkObj(8,2);
       linkObj(8,3);
       linkObj(8,4);
@@ -59,7 +60,7 @@ public class H2DB{
 
 			rs = s.executeQuery("SELECT * FROM data2;");
 			while(rs.next()){
-				System.out.println(rs.getInt(1)+" "+rs.getString(2));
+				System.out.println(rs.getInt(1)+" "+rs.getString(2)+" "+rs.getInt(3));
 			}
       System.out.println("----------------");
 			rs = s.executeQuery("SELECT * FROM dataref;");
@@ -73,12 +74,12 @@ public class H2DB{
 			//Log.m("ERROR(3): "+e);
 		}
   }
-  public static int insertObj(int refparent, String objType){
+  public static int insertObj(int refparent, String obj, int objType){
     int lastrec=0;
     try{
       int lastchild=0;
       Statement s = conn.createStatement();
-      s.executeUpdate("INSERT INTO data2 VALUES (null,'"+objType+"');");
+      s.executeUpdate("INSERT INTO data2 VALUES (null,'"+obj+"',"+objType+");");
       ResultSet rs = s.executeQuery("SELECT LAST_INSERT_ID();");
       while(rs.next()){ lastchild = rs.getInt(1); }
       lastrec=lastchild;
