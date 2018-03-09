@@ -17,6 +17,7 @@ public class Start{
 			new Mainframe();
 			Log.m("Подключение к локальной базе данных.");
 			H2DB.init();
+			H2DB.finish();
 		}});
 	}
 }

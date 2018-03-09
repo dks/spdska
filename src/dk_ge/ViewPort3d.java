@@ -63,7 +63,7 @@ public class ViewPort3d extends JInternalFrame {
 					new Vertex(100, -100, -100),
 					new Vertex(-100, -100, 100),
 					Color.BLUE));
-		//for (int i = 0; i < 3; i++) { tris = inflate(tris); }
+		for (int i = 0; i < 6; i++) { tris = inflate(tris); }
 		tris.add(new Triangle(new Vertex(-300, -100, -100),
 					new Vertex(-300, 100, -100),
 					new Vertex(300, 0, 100),

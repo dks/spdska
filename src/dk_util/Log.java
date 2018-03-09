@@ -14,11 +14,14 @@ public class Log{
 	protected Log(){ }
 	protected static void update(){ statWin.setText(lg.toString()+"</html>"); }
 
+	public static void m(String s){ 
+    System.out.println(s);
+    lg.append(s).append("<br />"); update();
+  }
 	public static void m(Exception e){ 
 		lg.append(e.getMessage()).append("<br />"); 
 		update(); 
 	}
-	public static void m(String s){ lg.append(s).append("<br />"); update(); }
 	public static void m(Object s){ 
 		lg.append(s.toString()).append("<br />"); 
 		update(); 
