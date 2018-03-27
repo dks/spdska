@@ -120,6 +120,12 @@ public class H2DB{
 			while(rs.next()){
 				System.out.println(rs.getInt(1)+" "+rs.getInt(2));
 			}
+      System.out.println("----------------");
+			rs = s.executeQuery("SELECT o.txt,p.txt FROM links AS l JOIN objects AS o "
+        +" ON l.objid=o.oid JOIN objects AS p ON l.refid=p.oid WHERE l.refid='8';");
+			while(rs.next()){
+				System.out.println(rs.getString(1)+"\t "+rs.getString(2));
+			}
 			rs.close();
 		}catch(Exception e){
 			Log.m("ERROR(7): Ошибка чтения базы данных. "+e);
